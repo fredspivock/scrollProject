@@ -1,0 +1,80 @@
+
+
+.fred-scrollmenu {
+  width:100%;
+  height: 150px;
+}
+
+
+html{
+    overflow-y: scroll;
+}
+
+.fred-sideBar {
+  width: 5%;
+  vertical-align: middle;
+  display: inline-block;
+  height: 100%;
+}
+
+.fred-bar-wrap {
+  position: absolute;
+  
+}
+
+.fred-bar {
+  height: 22px;
+  width: 3px;
+  background-color: orange;
+}
+
+.fred-text {
+  display: inline-block;
+  width: 30%;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.fred-image-wrap {
+  width: 65%;
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+
+
+ul {
+  list-style: none;
+}
+
+.fred-title {
+  font-size: 1.2em;
+}
+
+.fred-subtext {
+  height: 0px;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+
+}
+
+/* set height of fields, height ATM is arbitrary*/
+.fred-subtext .fred-scrollmenu.activated {
+  height: 100px;
+}
+
+
+/* Ignore following */
+#header {
+  height: 300px;
+  display: block;
+  width: 100%;
+}
+
+#footer {
+  height: 400px;
+}
