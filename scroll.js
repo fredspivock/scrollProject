@@ -19,56 +19,94 @@ function debounce(func, wait, immediate) {
   };
 };
 
-//the function
+var scrollList = function(element, numberOfItems, imageArray, scrollHeight, heightOfText) {
 
-/* NOTES
+    //sets element to height of window to take up full screen
+    $(element + " > .fred-menu-wrapper").css("height", $(window).height());
+    //
+    var elementTop = $(element + " > .fred-menu-wrapper").offset().top;
+    var elementHeight = $(element + " > .fred-menu-wrapper").height();
+    var wrapper = $(element).css({"height" : (scrollHeight + elementHeight) + "px"});
+    var activated = false;
+    var sectionHeight = scrollHeight/numberOfItems;
+    var section = 0;
+    var previousSection = -1;
 
-MAYBE A DIV WITH FOXED POSTION LIKE AN OVERLAY WOULD BE THE WAY FORWARD?!
-
-*/
-
-var scrollList = function(elementTop, elementHeight, numberOfItems, imageArray) {
-    
-    //console.log(count++);
-    //console.log(elementTop, elementHeight)
-    //console.log($(window).scrollTop() > elementTop);
-    //console.log($(window).scrollTop() < elementTop + elementHeight)
+    //set first image
+    $(element + " #fred-image").attr("src", imageArray[section]);
 
 
-    var sectionHeight = elementHeight/numberOfItems;
+    $(window).scroll(function() {
 
-    if($(window).scrollTop() > elementTop && $(window).scrollTop() < elementTop + elementHeight) {
-      console.log( ($(window).scrollTop() - elementTop) % sectionHeight);
-      $("body").css({ "height" : ($(window).height() - 1) + 'px', "overflow": "hidden" });
-    }
-    else {
-      $("body").removeClass('activated');
-    }
+      //below element
+      if($(window).scrollTop() < elementTop)  {
+        activated = false;
+        $(element + " > .fred-menu-wrapper").css({"position" : "absolute", "top": 0, "bottom": "auto"});
+      }
+      //between element and end of scroll height
+      else if ($(window).scrollTop() > elementTop && 
+        $(window).scrollTop() < elementTop + scrollHeight) {
+        
+        //sets the section
+        section = Math.floor(($(window).scrollTop() - elementTop) / sectionHeight);
+
+        //Locks the viewport to the top
+        if(!activated){
+          activated = true;
+          $(element + " > .fred-menu-wrapper").css({"position" : "fixed", "top": 0});
+        }
+
+        //If the section changes
+        //change image
+        //move cursor
+        //and reveal extra text
+        if( section !== previousSection){
+          //changes the image in the wrapper
+          $(element + " #fred-image").attr("src", imageArray[section]);
+
+          //makes text visible
+          $(element + " .fred-list :nth-child(" + (section + 1) + ") .fred-subtext").addClass("activated");
+
+          //remove previous text
+          $(element + " .fred-list :nth-child(" + (previousSection + 1) + ") .fred-subtext").removeClass("activated");
+
+           //moves the cursor 
+          $(element + " .fred-bar-wrapper").css("top", $(element + "  .fred-list :nth-child(" + (section + 1) + ")").position().top);
+
+          //sets previous section
+          previousSection = section;
+           console.log(section + 1, $(element + "  .fred-list :nth-child(" + (section + 1) + ")").position().top);
+        }
+
+      }
+      //after scroll height
+      else if( $(window).scrollTop() > elementTop + (scrollHeight - elementHeight)) {
+        activated = false;
+        $(element + " > .fred-menu-wrapper").css({"position" : "absolute", "bottom": 0, "top": "auto"});
+      }
+    });
 }
-
-  /* Settings, these are passed to the function, the following is place holder*/
-
-  //an array of image sources
-var imageArray = [
-  "https://deshannonspeaks.files.wordpress.com/2015/01/img_1132.jpg",
-  "http://img.ccrd.clearchannel.com/media/mlib/2135/2015/07/default/justin_bieber_main_0_1438172363.jpg",
-  "http://3.bp.blogspot.com/-vh2KxwKn3Gc/VBLh_rwA1uI/AAAAAAAAUVU/wlBR6sohlcM/s1600/Should-You-Get-a-Roommate.png",
-  "http://1.bp.blogspot.com/-ZIdi-_mvvd0/VZuu6uiFGYI/AAAAAAAAdQw/2-cTr-wGv2Y/s640/10-phone-designs-you-wont-believe-ever-sold.png"
-
-
-];
-
-var elementTop = $('#firstMenu').offset().top;
-
-//this can also be a scroll height
-var elementHeight = $('#firstMenu').height();
-var numberOfItems = 4;
 
 
 $(document).ready(function() {
-  $(window).scroll(function() {
-    debounce(scrollList(elementTop, elementHeight, numberOfItems, imageArray), 250);
-  });
+
+    /* Settings, these are passed to the function, the following is place holder*/
+
+  //an array of image sources
+  var imageArray = [
+    "https://deshannonspeaks.files.wordpress.com/2015/01/img_1132.jpg",
+    "http://img.ccrd.clearchannel.com/media/mlib/2135/2015/07/default/justin_bieber_main_0_1438172363.jpg",
+    "http://3.bp.blogspot.com/-vh2KxwKn3Gc/VBLh_rwA1uI/AAAAAAAAUVU/wlBR6sohlcM/s1600/Should-You-Get-a-Roommate.png",
+    "http://1.bp.blogspot.com/-ZIdi-_mvvd0/VZuu6uiFGYI/AAAAAAAAdQw/2-cTr-wGv2Y/s640/10-phone-designs-you-wont-believe-ever-sold.png"
+  ];
+
+  var element = "#firstMenu";
+  var numberOfItems = 3;
+  var scrollHeight = 1900;
+  var heightOfText = 300;
+
+  scrollList(element, numberOfItems, imageArray, scrollHeight, heightOfText);
+
 });
 
 
