@@ -26,7 +26,8 @@ var scrollList = function(element, numberOfItems, imageArray, scrollHeight, heig
     //
     var elementTop = $(element + " > .fred-menu-wrapper").offset().top;
     var elementHeight = $(element + " > .fred-menu-wrapper").height();
-    var wrapper = $(element).css({"height" : (scrollHeight + elementHeight) + "px"});
+    var wrapper = $(element).css({"height" : (scrollHeight + elementHeight) + "px", "width": $(window).width()});
+    $(element + " > .fred-menu-wrapper").css({"width" : $(element).width()})
     var activated = false;
     var sectionHeight = scrollHeight/numberOfItems;
     var section = 0;
@@ -34,7 +35,9 @@ var scrollList = function(element, numberOfItems, imageArray, scrollHeight, heig
 
     //set first image
     $(element + " #fred-image").attr("src", imageArray[section]);
-
+    //set first bar height
+    $(element + " .fred-bar-wrapper").css("top", $(element + "  .fred-list :nth-child(" + (section + 1) + ") .fred-title").position().top);
+    
 
     $(window).scroll(function() {
 
@@ -70,12 +73,12 @@ var scrollList = function(element, numberOfItems, imageArray, scrollHeight, heig
           //remove previous text
           $(element + " .fred-list :nth-child(" + (previousSection + 1) + ") .fred-subtext").removeClass("activated");
 
-           //moves the cursor 
-          $(element + " .fred-bar-wrapper").css("top", $(element + "  .fred-list :nth-child(" + (section + 1) + ")").position().top);
+          //moves the cursor 
+          $(element + " .fred-bar-wrapper").css("top", $(element + "  .fred-list :nth-child(" + (section + 1) + ") .fred-title").position().top);
 
           //sets previous section
           previousSection = section;
-           console.log(section + 1, $(element + "  .fred-list :nth-child(" + (section + 1) + ")").position().top);
+          console.log(section + 1, $(element + "  .fred-list :nth-child(" + (section + 1) + ") .fred-title").html());
         }
 
       }
@@ -101,7 +104,7 @@ $(document).ready(function() {
   ];
 
   var element = "#firstMenu";
-  var numberOfItems = 3;
+  var numberOfItems = 4;
   var scrollHeight = 1900;
   var heightOfText = 300;
 
